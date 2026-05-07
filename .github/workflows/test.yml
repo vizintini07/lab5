@@ -1,0 +1,29 @@
+name: CI Tests
+
+# Запускать при push и pull request в любую ветку
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    # Важно: это заставит GitHub искать раннер на машине Участника А
+    runs-on: self-hosted 
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11' # Укажите версию, которая стоит у Участника А
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run tests
+      run: |
+        pytest
