@@ -17,3 +17,14 @@ def test_time_route(client):
     assert "time" in data
     # Проверяем, что время не равно 0
     assert data["time"] != 0
+
+def test_metrics_route(client):
+    # Делаем 3 запроса к /time
+    client.get('/time')
+    client.get('/time')
+    client.get('/time')
+    
+    # Проверяем метрики
+    response = client.get('/metrics')
+    assert response.status_code == 200
+    assert response.json['count'] == 3
