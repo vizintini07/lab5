@@ -1,14 +1,16 @@
 name: CI Tests
 
-# Запускать при push и pull request в любую ветку
+# Запускать при push и pull request в основные ветки
 on:
   push:
+    branches: [ "main", "dev" ]
   pull_request:
+    branches: [ "main", "dev" ]
 
 jobs:
   test:
-    # Важно: это заставит GitHub искать раннер на машине Участника А
-    runs-on: self-hosted 
+    # Используем ваш локальный раннер на виртуальной машине
+    runs-on: self-hosted
 
     steps:
     - name: Checkout code
@@ -17,13 +19,17 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.11' # Укажите версию, которая стоит у Участника А
+        python-version: '3.11'
 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        # Устанавливаем flask и pytest напрямую, чтобы тесты точно запустились
+        pip install flask pytest
+        # Если у вас есть другие зависимости в файле, раскомментируйте строку ниже:
+        # pip install -r requirements.txt
 
     - name: Run tests
       run: |
-        pytest
+        # Запускаем pytest для проверки всех тестов (v1 и v2)
+        pytest test_app.py
